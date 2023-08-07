@@ -37,7 +37,7 @@ export const getAllProductsForBuyer = (page,title) => {
                 Authorization: `Bearer ${token}`
             },
             params: {
-                page: page.pageNum,
+                page: page.pageNumber,
                 size: page.pageSize,
                 title: title
             },
@@ -45,15 +45,16 @@ export const getAllProductsForBuyer = (page,title) => {
         .then((results) => results.data);
 };
 
-export const getAllProductsForSeller = (page,title) => {
+export const getAllProductsForSeller = (page,title,finished) => {
     return instance
         .get(`users/products/sold`, {
             headers:{
                 Authorization: `Bearer ${token}`
             },
             params: {
-                page: page.pageNum,
+                page: page.pageNumber,
                 size: page.pageSize,
+                finished: finished,
                 title: title
             },
         })

@@ -9,7 +9,7 @@ export const getAllProducts = (page,title) => {
     return instance
         .get(`products/`, {
             params: {
-                page: page.pageNum,
+                page: page.pageNumber,
                 size: page.pageSize,
                 title: title
             },
@@ -25,7 +25,7 @@ export const getProductByid = (idProduct) => {
 
 export const searchProduct = (page,searchProduct) => {
     return instance
-        .post(`products/searchProducts?page=${page.pageNum}&size=${page.pageSize}`,searchProduct)
+        .post(`products/searchProducts?page=${page.pageNumber}&size=${page.pageSize}`,searchProduct)
         .then((results) => results.data);
 };
 
