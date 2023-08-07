@@ -14,12 +14,12 @@ export const getCategory = (idCategory) => {
         .then((results) => results.data);
 };
 
-export const getAllProductForCategory = (page,idCategory) => {
+export const getAllProductForCategory = (page,size,idCategory) => {
     return instance
         .get(`categories/${idCategory}/products`, {
             params: {
-                page: page.pageNumber,
-                size: page.pageSize,
+                page: page,
+                size: size,
             },
         })
         .then((results) => results.data);

@@ -30,30 +30,30 @@ export const changePassword = (idUser,dataToUpdate) => {
         .then((results) => results.data);
 };
 
-export const getAllProductsForBuyer = (page,title) => {
+export const getAllProductsForBuyer = (page,size,title) => {
     return instance
         .get(`users/products/purchased`,{
             headers:{
                 Authorization: `Bearer ${token}`
             },
             params: {
-                page: page.pageNumber,
-                size: page.pageSize,
+                page: page,
+                size: size,
                 title: title
             },
         })
         .then((results) => results.data);
 };
 
-export const getAllProductsForSeller = (page,title,finished) => {
+export const getAllProductsForSeller = (page,title,size,finished) => {
     return instance
         .get(`users/products/sold`, {
             headers:{
                 Authorization: `Bearer ${token}`
             },
             params: {
-                page: page.pageNumber,
-                size: page.pageSize,
+                page: page,
+                size: size,
                 finished: finished,
                 title: title
             },

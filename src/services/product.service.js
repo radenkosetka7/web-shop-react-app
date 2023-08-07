@@ -5,12 +5,12 @@ const authInstance = base.service(true);
 const token = sessionStorage.getItem('access');
 
 
-export const getAllProducts = (page,title) => {
+export const getAllProducts = (page,size,title) => {
     return instance
         .get(`products/`, {
             params: {
-                page: page.pageNumber,
-                size: page.pageSize,
+                page: page,
+                size: size,
                 title: title
             },
         })
@@ -23,9 +23,9 @@ export const getProductByid = (idProduct) => {
         .then((results) => results.data);
 };
 
-export const searchProduct = (page,searchProduct) => {
+export const searchProduct = (page,size,searchProduct) => {
     return instance
-        .post(`products/searchProducts?page=${page.pageNumber}&size=${page.pageSize}`,searchProduct)
+        .post(`products/searchProducts?page=${page}&size=${size}`,searchProduct)
         .then((results) => results.data);
 };
 
