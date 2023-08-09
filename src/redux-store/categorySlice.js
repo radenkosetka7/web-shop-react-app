@@ -30,6 +30,7 @@ const categorySlice = createSlice({
     extraReducers: {
         [getCategories.fulfilled]: (state, action) => {
             state.loading = false;
+            state.error=null;
             state.categories = action.payload;
         },
         [getCategories.pending]: (state,action) => {
@@ -40,6 +41,7 @@ const categorySlice = createSlice({
         },
         [getCategory.fulfilled]: (state, action) => {
             state.loading = false;
+            state.error=null;
             state.selectedCategory = action.payload;
         },
         [getCategory.pending]: (state,action) => {

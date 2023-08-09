@@ -59,6 +59,7 @@ const userSlice = createSlice({
             state.authenticatedFailed=false;
             state.authenticated=true;
             state.loading=false;
+            state.error=null;
             state.user=action.payload;
         },
         [login.pending]: (state) => {
@@ -71,6 +72,7 @@ const userSlice = createSlice({
         [updateUser.fulfilled]: (state, action) => {
             state.loading = false;
             state.authenticated = true;
+            state.error=null;
             state.user = action.payload;
         },
         [updateUser.pending]: (state, action) => {
@@ -82,6 +84,7 @@ const userSlice = createSlice({
         [changePassword.fulfilled]: (state, action) => {
             state.loading = false;
             state.authenticated = true;
+            state.error=null;
             state.user = action.payload;
         },
         [changePassword.pending]: (state, action) => {
