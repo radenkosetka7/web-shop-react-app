@@ -3,7 +3,7 @@ import base from './base.service';
 const instance = base.service();
 export const login = (username, password) => {
     return instance
-        .post('login/', {username, password})
+        .post('login', {username, password})
         .then((results) => {
             const {access} = results.data;
             sessionStorage.setItem('access', access);

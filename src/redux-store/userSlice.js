@@ -17,6 +17,9 @@ export const updateUser = createAsyncThunk("users/updateUser", async ({
         return rejectWithValue("Error while updating model. Please try later.");
     }
 });
+export const getUser = createAsyncThunk("users/getUser", async ({id}) => {
+    return await userService.getUser(id);
+});
 export const changePassword = createAsyncThunk("users/changePassword", async ({
                                                                           id,
                                                                           value
@@ -60,13 +63,23 @@ const userSlice = createSlice({
             state.authenticated=true;
             state.loading=false;
             state.error=null;
-            state.user=action.payload;
         },
         [login.pending]: (state) => {
             state.loading = true;
         },
         [login.rejected]: (state) => {
             state.authenticatedFailed = true;
+            state.loading = false;
+        },
+        [getUser.fulfilled]: (state,action) => {
+            state.loading=false;
+            state.error=null;
+            state.user=action.payload;
+        },
+        [getUser.pending]: (state,action) => {
+            state.loading = true;
+        },
+        [getUser.rejected]: (state,action) => {
             state.loading = false;
         },
         [updateUser.fulfilled]: (state, action) => {

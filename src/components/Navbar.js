@@ -26,6 +26,7 @@ export default function Navbar() {
                 {!authenticated && (
                     <Link
                         className={`home underline ${activeLink === 'admin' ? 'active' : ''}`}
+                        to="/login"
                         onClick={() => handleLinkClick('login')}
                         style={{ color: "white", fontWeight:"bold" }}
                     >
