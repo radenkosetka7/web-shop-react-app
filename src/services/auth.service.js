@@ -13,13 +13,24 @@ export const login = (username, password) => {
 }
 export const registration = (registrationData) => {
     return instance
-        .post('register/', registrationData)
+        .post('sign-up', registrationData)
         .then((results) => results);
 }
 
 export const activateAccount = (activateAccountData) => {
     return instance
-        .post('activeAccount/', activateAccountData)
+        .post('activeAccount', activateAccountData)
+        .then((results) => results);
+}
+
+export const uploadImage = (imageData) => {
+    const file = imageData.get("file");
+    return instance
+        .post('uploadImage', {file}, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
         .then((results) => results);
 }
 export const logout = () => sessionStorage.removeItem('access');

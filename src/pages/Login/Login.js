@@ -34,7 +34,7 @@ const Login = () => {
     return (
         <div style={{backgroundColor:'#f3f1f1',height:contentHeight}}>
             <div className='linearGradient'>
-                <form className='form' onSubmit={handleSubmit(onSubmit)}>
+                <form className='form2' onSubmit={handleSubmit(onSubmit)}>
                     <p className="form-title">Sign in to your account</p>
                     <div className="input-container">
                         <input placeholder="Username" type="text"

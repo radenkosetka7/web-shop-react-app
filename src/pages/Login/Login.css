@@ -1,4 +1,4 @@
-.form {
+.form2 {
     background-color: #f3f1f1;
     display: block;
     padding: 1rem;
@@ -31,7 +31,7 @@
 .input-container input {
     background-color: #fff;
     padding: 1rem;
-    padding-right: 3rem;
+    padding-right: 2rem;
     font-size: .875rem;
     line-height: 1.25rem;
     width: 300px;
@@ -76,6 +76,9 @@
 
 .LoginLink{
     text-decoration: none;
+    color: rebeccapurple;
+    font-weight: bold;
+    font-size: 14px;
 }
 
 .error {

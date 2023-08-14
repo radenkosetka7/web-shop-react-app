@@ -59,8 +59,6 @@ const userSlice = createSlice({
     extraReducers: {
         [login.fulfilled]: (state,action) =>
         {
-            state.authenticatedFailed=false;
-            state.authenticated=true;
             state.loading=false;
             state.error=null;
         },
@@ -74,6 +72,7 @@ const userSlice = createSlice({
         [getUser.fulfilled]: (state,action) => {
             state.loading=false;
             state.error=null;
+            state.authenticated=true;
             state.user=action.payload;
         },
         [getUser.pending]: (state,action) => {
