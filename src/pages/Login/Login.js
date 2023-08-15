@@ -6,21 +6,34 @@ import {useEffect, useState} from 'react';
 import {statusCodeMessage} from '../../util/StatusCodeException/StatusCode';
 import {useNavigate, Link} from "react-router-dom";
 import {getUser} from "../../redux-store/userSlice";
-
+import {getByUsername} from "../../services/auth.service";
 const Login = () => {
 
     const {register, handleSubmit, formState: {errors}} = useForm();
     const dispatch = useDispatch();
     const nav = useNavigate();
     const [statusCode, setStatusCode] = useState(null);
-    const [contentHeight, setContentHeight] = useState('calc(100vh - 65px)');
+    const [contentHeight, setContentHeight] = useState('calc(100vh - 73px)');
     const {authenticated, loading} = useSelector((state) => state.users);
+    const navigate = useNavigate();
+
 
     const onSubmit = async (loginData) => {
         const response = await dispatch(login(loginData));
-        if (response.error) {
-            setStatusCode(response.error.message);
-            return;
+        if(response.error)
+        {
+            if(response.error.message === "401")
+            {
+                setStatusCode(response.error.message);
+                setTimeout(() => {
+                    navigate("/activateAccount", {state: {username: loginData.username}});
+                }, 2000);
+                return;
+            }
+            else {
+                setStatusCode(response.error.message);
+                return;
+            }
         }
         dispatch(getUser({id: response.payload.id}));
         nav('/');

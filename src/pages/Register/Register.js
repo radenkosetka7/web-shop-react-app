@@ -1,62 +1,47 @@
 import './Register.css';
-import { registration, uploadImage } from '../../services/auth.service';
+import {registration, uploadImage} from '../../services/auth.service';
 import {
-    signUpTitle, isRequired, errorLength, invalidEmail,errorCPass
+    signUpTitle, isRequired, errorLength, invalidEmail, errorCPass
 } from '../../constant/constants';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {Button, Form, Input} from 'antd';
-import { useEffect } from "react";
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from "react-redux";
-
-//toast notifications
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import {UploadOutlined} from "@ant-design/icons";
+import {useEffect} from "react";
+import {Link, useNavigate} from 'react-router-dom';
+import {useDispatch, useSelector} from "react-redux";
 
 
-export default function Register() {
+const Register = () => {
 
     const [isDisabled, setIsDisabled] = useState(false);
-    const [contentHeight, setContentHeight] = useState('calc(100vh - 65px)');
+    const [contentHeight, setContentHeight] = useState('calc(100vh - 75px)');
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { authenticated } = useSelector((state) => state.users);
+    const {authenticated} = useSelector((state) => state.users);
 
     useEffect(() => {
         if (authenticated)
             navigate('/');
     }, [authenticated, navigate, dispatch]);
 
+    const [statusCode, setStatusCode] = useState(null);
 
-    const notify = () => {
-        toast.success('Successfully registered!', {
-            position: "bottom-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-        });
-    }
     const [selectedFile, setSelectedFile] = useState();
+    const [tempVariable, setTempVariable] = useState(null);
     const changeHandler = (event) => {
-
         setSelectedFile(event.target.files[0]);
-
+        setTempVariable(1);
     };
     const onSubmit = async (registerData) => {
         setIsDisabled(true);
-        const formData= new FormData();
-        formData.append("file",selectedFile);
+        const formData = new FormData();
+        formData.append("file", selectedFile);
         try {
-            let responseImage=null;
-            if(formData.get("file")!=null)
-            {
+            let responseImage = null;
+
+            if (tempVariable !== null) {
+                console.log("zove li se ova metoda ikako " + formData.get("file"));
                 responseImage = await uploadImage(formData);
             }
             const registerReq = {
@@ -66,15 +51,15 @@ export default function Register() {
                 username: registerData.username,
                 password: registerData.password,
                 mail: registerData.mail,
-                avatar: responseImage.data !== "" ? responseImage.data : null
+                avatar: tempVariable !== null ? responseImage.data : null
             }
             const response = await registration(registerReq);
             if (response.status === 200 || response.status === 201) {
-                notify();
+                setStatusCode("Successfully registered.");
                 setTimeout(() => {
-                    navigate("/login");
+                    navigate("/activateAccount", {state: {username: registerReq.username}});
                     setIsDisabled(false);
-                }, 3000);
+                }, 2000);
             } else {
                 setIsDisabled(false);
             }
@@ -89,7 +74,7 @@ export default function Register() {
 
     return (
         <div>
-            <div style={{backgroundColor:'#f3f1f1',height:contentHeight}}>
+            <div style={{backgroundColor: '#f3f1f1', height: contentHeight}}>
                 <div className='linearGradient1'>
                     <Form
                         name="basic"
@@ -121,7 +106,7 @@ export default function Register() {
                                 },
                             ]}
                         >
-                            <Input />
+                            <Input/>
                         </Form.Item>
                         <Form.Item
                             label="Lastname"
@@ -134,7 +119,7 @@ export default function Register() {
                                 },
                             ]}
                         >
-                            <Input />
+                            <Input/>
                         </Form.Item>
                         <Form.Item
                             label="Username"
@@ -148,7 +133,7 @@ export default function Register() {
                                 },
                             ]}
                         >
-                            <Input />
+                            <Input/>
                         </Form.Item>
 
                         <Form.Item
@@ -162,12 +147,12 @@ export default function Register() {
 
                                 },
                                 {
-                                    min:8,
+                                    min: 8,
                                     message: errorLength,
                                 }
                             ]}
                         >
-                            <Input.Password />
+                            <Input.Password/>
                         </Form.Item>
                         <Form.Item
                             label="Confirm password: "
@@ -178,7 +163,7 @@ export default function Register() {
                                     required: true,
                                     message: 'Password' + isRequired,
                                 },
-                                ({ getFieldValue }) => ({
+                                ({getFieldValue}) => ({
                                     validator(_, value) {
                                         if (!value || getFieldValue('password') === value) {
                                             return Promise.resolve();
@@ -188,7 +173,7 @@ export default function Register() {
                                 }),
                             ]}
                         >
-                            <Input.Password />
+                            <Input.Password/>
                         </Form.Item>
                         <Form.Item
                             label="Email"
@@ -223,8 +208,15 @@ export default function Register() {
                             label="Avatar"
                             name="avatar"
                         ><input type="file" onChange={changeHandler} id="file" name="file"
-                                accept=".jpg, .jpeg, .png" />
+                                accept=".jpg, .jpeg, .png"/>
                         </Form.Item>
+                        {
+                            statusCode &&
+                            <p className='error1' style={{maxWidth: "250px"}}>
+                                {statusCode}
+                            </p>
+
+                        }
                         <Form.Item
                             wrapperCol={{
                                 offset: 10,
@@ -247,3 +239,4 @@ export default function Register() {
 
     )
 }
+export default Register;

@@ -1,9 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Layout, Pagination, Select, Input, InputNumber, Button} from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import SearchComponent from "../../components/Search/Search";
 import CardComponent from "../../components/Card/CardComponent";
 import CategoryList from "../../components/CategoryList/CategoryList";
+import jwtDecode from "jwt-decode";
+import {getUser} from "../../redux-store/userSlice";
+import {useDispatch} from "react-redux";
 const { Footer, Sider, Content } = Layout;
 const contentStyle = {
     textAlign: 'center',
@@ -22,7 +25,7 @@ const footerStyle = {
 };
 const Home = () => {
 
-    const [contentHeight, setContentHeight] = useState('calc(100vh - 117px)');
+    const [contentHeight, setContentHeight] = useState('calc(100vh - 125px)');
     const [current, setCurrent] = useState(1);
 
     const onChange = (page) => {
@@ -34,6 +37,20 @@ const Home = () => {
     const onSearch = (value) => {
         console.log('search:', value);
     };
+    const dispatch = useDispatch();
+
+
+    useEffect(() => {
+        const token = sessionStorage.getItem('access');
+        if (token !== null)
+        {
+            const decodedToken = jwtDecode(token);
+            const id = parseInt(decodedToken.jti);
+            dispatch(getUser({id: id}));
+
+        }
+    }, []);
+
     return (<div style={{height: contentHeight}}>
         <SearchComponent/>
         <Layout style={{minHeight: '100%'}}>

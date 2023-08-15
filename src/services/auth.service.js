@@ -5,8 +5,8 @@ export const login = (username, password) => {
     return instance
         .post('login', {username, password})
         .then((results) => {
-            const {access} = results.data;
-            sessionStorage.setItem('access', access);
+            const {token} = results.data;
+            sessionStorage.setItem('access', token);
             return results.data;
         })
         .catch((err) => Promise.reject(err.response.status));
@@ -14,6 +14,12 @@ export const login = (username, password) => {
 export const registration = (registrationData) => {
     return instance
         .post('sign-up', registrationData)
+        .then((results) => results);
+}
+
+export const getByUsername = (username) => {
+    return instance
+        .get('users/byName', username)
         .then((results) => results);
 }
 
