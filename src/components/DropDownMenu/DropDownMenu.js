@@ -8,6 +8,7 @@ import {logout} from "../../redux-store/userSlice";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import CustomerSupportModal from "../../pages/CustomerSupport/CustomerSupportModal";
+import AddProduct from "../../pages/AddProduct/AddProduct";
 
 const items = [
     {
@@ -38,16 +39,25 @@ const DropDownMenu = () => {
     const navigate = useNavigate();
 
     const [supportModal, setSupportModal] = useState(false);
+    const [addProductModal, setAddProductModal] = useState(false);
     const onClick = ({key}) => {
         if (key === '4') {
             handleLogout();
         } else if (key === '3') {
             setSupportModal(true);
         }
+        else if (key === '2')
+        {
+            setAddProductModal(true);
+        }
     };
 
     const handleCloseSupportModal = () => {
         setSupportModal(false);
+    };
+
+    const handleCloseAddProductModal = () => {
+        setAddProductModal(false);
     };
 
 
@@ -73,6 +83,7 @@ const DropDownMenu = () => {
                 </a>
             </Dropdown>
             { supportModal && <CustomerSupportModal show={supportModal} onClose={handleCloseSupportModal}/> }
+            { addProductModal && <AddProduct show={addProductModal} onClose={handleCloseAddProductModal}/> }
         </div>
 
     );
