@@ -1,11 +1,13 @@
 import {Button, Modal, Input, Form, Select, Steps, InputNumber} from 'antd';
 import {useDispatch} from "react-redux";
-import {createMessage} from "../../redux-store/messageSlice";
 import React, {useState} from "react";
 import GeneralForm from "../Forms/GeneralForm";
 import ImagesForm from "../Forms/ImagesForm";
 import SelectCategory from "../Forms/SelectCategory";
 import AttributeForm from "../Forms/AttributeForm";
+import Finished from "../Forms/Finished";
+import {uploadImages} from "../../services/auth.service";
+import {createProduct} from "../../redux-store/productSlice";
 const { TextArea } = Input;
 const { Option } = Select;
 const AddProduct = ({show,onClose}) => {
@@ -24,12 +26,34 @@ const AddProduct = ({show,onClose}) => {
         setCurrentPage(1);
     }
 
-    const handleFormSubmit = (values) => {
+    const handleFormSubmit = async (values) => {
         setIsDisabled(true)
-        const messageRequest = {
-            question: values.message,
+
+         const responseImages = await uploadImages(imageDetails);
+        const imagesRequests = responseImages.data.map(imageName => {
+            return { productImage: imageName };
+        });
+
+        const resultAttributes = Object.entries(attributeDetails).map(([attributId, value]) => ({
+            value: parseInt(value),
+            attributId: parseInt(attributId)
+        }));
+
+        const productRequest= {
+            title: generalDetails.name,
+            description: generalDetails.description,
+            price: generalDetails.price,
+            productStatus: 0,
+            city: generalDetails.city,
+            contact: generalDetails.contact,
+            categoryId: categoryDetails.category,
+            images: imagesRequests,
+            attributeValues: resultAttributes
         };
-       // dispatch(createMessage({value:messageRequest}));
+
+        console.log("request json " + JSON.stringify(productRequest));
+        const response = dispatch(createProduct({value:productRequest}));
+        console.log("response json " + JSON.stringify(response));
         setStatusCode("Message sent successfully.");
         setTimeout(() => {
             setIsDisabled(false);
@@ -42,7 +66,7 @@ const AddProduct = ({show,onClose}) => {
     const [attributeDetails,setAttributeDetails]=useState(null);
 
     const onFinishedImage=(values) => {
-        setImageDetails(values);
+        setImageDetails(values.images);
         setCurrentPage(2);
     }
     const onFinishedCatergory=(values) => {
@@ -51,12 +75,7 @@ const AddProduct = ({show,onClose}) => {
     }
     const onFinishedAttribute=(values) => {
         setAttributeDetails(values);
-        console.log("jesam li ovdje sada ");
-        console.log("general " + JSON.stringify(generalDetails));
-        console.log("images " + JSON.stringify(imageDetails));
-        console.log("category " + JSON.stringify(categoryDetails));
-        console.log("attributes " + JSON.stringify(attributeDetails));
-
+        setCurrentPage(4)
     }
     const isStepDisabled = (number) => {
         if(number === 0)
@@ -75,12 +94,17 @@ const AddProduct = ({show,onClose}) => {
         {
             return generalDetails === null || imageDetails === null || categoryDetails === null
         }
+        if(number === 4)
+        {
+            return generalDetails === null || imageDetails === null || categoryDetails === null || attributeDetails === null
+        }
     }
     const forms= [
         <GeneralForm onFinish={onFinishedGeneral} initialValues={generalDetails}/>,
         <ImagesForm onFinish={onFinishedImage}/>,
         <SelectCategory onFinish={onFinishedCatergory} initialValues={categoryDetails}/>,
-        <AttributeForm onFinish={onFinishedAttribute} categoryId={categoryDetails!==null ? categoryDetails.category:0} initialValues={attributeDetails}/>
+        <AttributeForm onFinish={onFinishedAttribute} categoryId={categoryDetails!==null ? categoryDetails.category:0} initialValues={attributeDetails}/>,
+        <Finished onFinish={handleFormSubmit} isDisabled={isDisabled}/>
     ]
 
     return (
@@ -92,6 +116,7 @@ const AddProduct = ({show,onClose}) => {
                     <Steps.Step disabled={isStepDisabled(1)} title='Images'></Steps.Step>
                     <Steps.Step disabled={isStepDisabled(2)} title='Category'></Steps.Step>
                     <Steps.Step disabled={isStepDisabled(3)} title='Attributes'></Steps.Step>
+                    <Steps.Step disabled={isStepDisabled(4)} title='Finished'></Steps.Step>
                 </Steps>
                 {forms[currentPage]}
             </Modal>

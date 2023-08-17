@@ -39,11 +39,29 @@ export const uploadImage = (imageData) => {
         })
         .then((results) => results);
 }
+
+export const uploadImages = (imageData) => {
+
+    const formData = new FormData();
+    imageData.forEach(file => {
+        formData.append("files", file);
+    });
+
+    return instance
+        .post('uploadImages', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+        .then((results) => results);
+}
 export const logout = () => sessionStorage.removeItem('access');
 const auth = {
     login,
     registration,
     activateAccount,
+    uploadImages,
+    uploadImage,
     logout,
 };
 export default auth;

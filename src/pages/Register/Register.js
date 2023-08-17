@@ -41,7 +41,6 @@ const Register = () => {
             let responseImage = null;
 
             if (tempVariable !== null) {
-                console.log("zove li se ova metoda ikako " + formData.get("file"));
                 responseImage = await uploadImage(formData);
             }
             const registerReq = {

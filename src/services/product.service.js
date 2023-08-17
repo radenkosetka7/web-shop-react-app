@@ -31,7 +31,7 @@ export const searchProduct = (page,size,searchProduct) => {
 
 export const addProduct = (productData) => {
     return authInstance
-        .post(`products/`,productData, {
+        .post(`products`,productData, {
             headers:{
                 Authorization: `Bearer ${token}`
             },

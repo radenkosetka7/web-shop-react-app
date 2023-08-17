@@ -1,17 +1,30 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Space } from 'antd';
 
 const ImagesForm = ({onFinish}) => {
 
+
+    const [selectedImages, setSelectedImages] = useState([]);
+
+    const handleImageChange = (index, event) => {
+        const newImages = [...selectedImages];
+        newImages[index] = event.target.files[0];
+        setSelectedImages(newImages);
+    };
+    const handleSubmit = (values) => {
+        // Here, you can access the selectedImages array and pass it to the onFinish callback.
+        onFinish({ ...values, images: selectedImages });
+    };
+
     return (
-        <Form
-            onFinish={onFinish}
-            style={{
-                maxWidth: 600,
-            }}
-            autoComplete="off"
-        >
+            <Form
+                onFinish={handleSubmit}
+                style={{
+                    maxWidth: 600,
+                }}
+                autoComplete="off"
+            >
             <br/>
             <Form.List name="image"
                        rules={[
@@ -28,7 +41,7 @@ const ImagesForm = ({onFinish}) => {
                        ]}>
                 {(fields, {add, remove}) => (
                     <>
-                        {fields.map(({key, name, ...restField}) => (
+                        {fields.map(({key, name, ...restField}, index) => (
                             <Space
                                 key={key}
                                 style={{
@@ -47,8 +60,10 @@ const ImagesForm = ({onFinish}) => {
                                         },
                                     ]}
                                 >
-                                    <input type="file" id="file" name="file"
-                                           accept=".jpg, .jpeg, .png"/>
+                                    <input type="file"  id={`file_${index}`}
+                                           name={`file_${index}`}
+                                           accept=".jpg, .jpeg, .png"
+                                           onChange={(event) => handleImageChange(index, event)}/>
                                 </Form.Item>
                                 <MinusCircleOutlined onClick={() => remove(name)}/>
                             </Space>

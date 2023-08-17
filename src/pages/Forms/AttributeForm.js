@@ -28,7 +28,7 @@ const AttributeForm = ({ onFinish, categoryId, initialValues }) => {
             {selectedCategory !== null && selectedCategory.attributes.map((attribute) => (
                     <Form.Item
                         label={attribute.name}
-                        name={`value_${attribute.id}`}
+                        name={`${attribute.id}`}
                         labelCol={{ span: 8 }}
                         wrapperCol={{ span: 10 }}
                         rules={[{ required: true, message: "Please enter a value." }]}
@@ -42,7 +42,7 @@ const AttributeForm = ({ onFinish, categoryId, initialValues }) => {
             ))}
             <Form.Item wrapperCol={{ offset: 18, span: 14 }}>
                 <Button type="primary" htmlType="submit">
-                    Finished
+                    Continue
                 </Button>
             </Form.Item>
             {statusCode && <p className="error1" style={{ maxWidth: "250px" }}>{statusCode}</p>}
