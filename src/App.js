@@ -10,6 +10,7 @@ import {useEffect} from "react";
 import {logout} from "./redux-store/userSlice";
 import {useDispatch} from "react-redux";
 import jwtDecode from "jwt-decode";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
 
@@ -46,6 +47,7 @@ function App() {
               <Route path="/login" element={<Login />} exact/>
               <Route path="/register" element={<Register/>} exact/>
               <Route path="/activateAccount" element={<ActivateAccount/>} exact/>
+              <Route path="/myProfile" element={<Profile/>} exact/>
               <Route path="*" element={<NotFound/>}/>
           </Routes>
       </BrowserRouter>

@@ -50,6 +50,10 @@ const DropDownMenu = () => {
         {
             setAddProductModal(true);
         }
+        else if( key === '1')
+        {
+            navigate('/myProfile');
+        }
     };
 
     const handleCloseSupportModal = () => {
