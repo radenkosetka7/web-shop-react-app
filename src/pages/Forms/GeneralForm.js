@@ -1,11 +1,17 @@
-import {Button, Form, Input, InputNumber} from "antd";
+import {Button, FloatButton, Form, Input, InputNumber, Switch} from "antd";
 import React, {useState} from "react";
 import TextArea from "antd/es/input/TextArea";
+import {CommentOutlined, CustomerServiceOutlined} from "@ant-design/icons";
 
 
 const GeneralForm = ({onFinish, initialValues}) => {
 
     const [statusCode, setStatusCode] = useState(null);
+
+    const [open, setOpen] = useState(false);
+    const onChangeOpen = (checked) => {
+        setOpen(checked);
+    };
     return (
         <Form
             initialValues={initialValues}
@@ -31,8 +37,17 @@ const GeneralForm = ({onFinish, initialValues}) => {
             <Form.Item wrapperCol={{ offset: 2, span: 14 }} label="Price" name="price" rules={[
                 { required: true, message: 'Please enter a price.' },
             ]}>
-                <InputNumber />
+                <InputNumber min={1} />
             </Form.Item >
+            <Form.Item wrapperCol={{ offset: 2, span: 14 }} label="New" name="condition" rules={[
+            ]}>
+            <Switch
+                onChange={onChangeOpen}
+                checked={open}
+                style={{
+                }}
+            />
+            </Form.Item>
             <Form.Item wrapperCol={{ offset: 2, span: 14 }} label="City" name="city" rules={[
                 { required: true, message: 'Please enter a city.' },
             ]}>

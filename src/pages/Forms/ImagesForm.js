@@ -12,6 +12,12 @@ const ImagesForm = ({onFinish}) => {
         newImages[index] = event.target.files[0];
         setSelectedImages(newImages);
     };
+
+    const handleRemoveImage = (index) => {
+        const newImages = [...selectedImages];
+        newImages.splice(index, 1);
+        setSelectedImages(newImages);
+    };
     const handleSubmit = (values) => {
         // Here, you can access the selectedImages array and pass it to the onFinish callback.
         onFinish({ ...values, images: selectedImages });
@@ -65,7 +71,10 @@ const ImagesForm = ({onFinish}) => {
                                            accept=".jpg, .jpeg, .png"
                                            onChange={(event) => handleImageChange(index, event)}/>
                                 </Form.Item>
-                                <MinusCircleOutlined onClick={() => remove(name)}/>
+                                <MinusCircleOutlined onClick={() => {
+                                    remove(name);
+                                    handleRemoveImage(index);
+                                }}/>
                             </Space>
                         ))}
                         <Form.Item>

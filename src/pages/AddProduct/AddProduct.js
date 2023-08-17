@@ -35,15 +35,16 @@ const AddProduct = ({show,onClose}) => {
         });
 
         const resultAttributes = Object.entries(attributeDetails).map(([attributId, value]) => ({
-            value: parseInt(value),
-            attributId: parseInt(attributId)
+            value: value,
+            attributeId: parseInt(attributId)
         }));
+
 
         const productRequest= {
             title: generalDetails.name,
             description: generalDetails.description,
             price: generalDetails.price,
-            productStatus: 0,
+            productStatus: generalDetails.condition === true ? 0 : 1,
             city: generalDetails.city,
             contact: generalDetails.contact,
             categoryId: categoryDetails.category,
@@ -51,10 +52,7 @@ const AddProduct = ({show,onClose}) => {
             attributeValues: resultAttributes
         };
 
-        console.log("request json " + JSON.stringify(productRequest));
-        const response = dispatch(createProduct({value:productRequest}));
-        console.log("response json " + JSON.stringify(response));
-        setStatusCode("Message sent successfully.");
+        dispatch(createProduct({value:productRequest}));
         setTimeout(() => {
             setIsDisabled(false);
             onClose();

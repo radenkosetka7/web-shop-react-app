@@ -27,17 +27,14 @@ const AttributeForm = ({ onFinish, categoryId, initialValues }) => {
             <br/>
             {selectedCategory !== null && selectedCategory.attributes.map((attribute) => (
                     <Form.Item
-                        label={attribute.name}
+                        label={`${attribute.name}`}
                         name={`${attribute.id}`}
                         labelCol={{ span: 8 }}
                         wrapperCol={{ span: 10 }}
                         rules={[{ required: true, message: "Please enter a value." }]}
                     >
-                        {attribute.type === 'INT' || attribute.type === 'DOUBLE' ? (
-                            <InputNumber min={1} />
-                        ) : (
-                            <Input />
-                        )}
+                        {(attribute.type === 'INT' || attribute.type === 'DOUBLE') && <InputNumber min={1} />}
+                        {attribute.type === 'STRING' && <Input/>}
                     </Form.Item>
             ))}
             <Form.Item wrapperCol={{ offset: 18, span: 14 }}>
