@@ -16,6 +16,21 @@ const Profile = () => {
     const [profileModal, setProfileModal] = useState(false);
     const {user} = useSelector((state)=>state.users);
     const [passwordModal, setPasswordModal] = useState(false);
+    const dispatch=useDispatch();
+    const [refreshKey, setRefreshKey] = useState(0);
+
+
+    useEffect(() => {
+        const token = sessionStorage.getItem('access');
+        if (token !== null)
+        {
+            const decodedToken = jwtDecode(token);
+            const id = parseInt(decodedToken.jti);
+            dispatch(getUser({id: id}));
+
+        }
+    }, [refreshKey]);
+
 
 
     useEffect(() => {
@@ -45,7 +60,12 @@ const Profile = () => {
     };
     const handleEditProfileClose = () => {
         setProfileModal(false);
+        handleSaveUpdate();
 
+    };
+
+    const handleSaveUpdate = () => {
+        setRefreshKey((prevKey) => prevKey + 1);
     };
 
     const handleChangePassowrdOpen = () => {
