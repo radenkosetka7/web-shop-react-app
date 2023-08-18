@@ -47,7 +47,7 @@
 
 .editButton{
     display: flex;
-    min-width: 60%;
+    min-width: 50%;
     width: fit-content;
     align-items: center;
     color: white;

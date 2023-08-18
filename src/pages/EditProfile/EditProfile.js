@@ -30,6 +30,7 @@ const EditProfile = ({show,onClose}) => {
                 formData.append("file", selectedFile);
                 responseImage = await uploadImage(formData);
             }
+            await new Promise(resolve => setTimeout(resolve, 1500));
             const uploadData = {
                 name:values.name,
                 surname:values.surname,

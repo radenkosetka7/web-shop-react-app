@@ -18,7 +18,9 @@ export const getCategory = createAsyncThunk("categories/getCategory", async ({va
     }
 });
 
-
+const removeCat = (state) => {
+    state.selectedCategory=null;
+}
 
 const categorySlice = createSlice({
     name: 'categories',
@@ -26,7 +28,9 @@ const categorySlice = createSlice({
         categories: [],
         selectedCategory: null
     },
-    reducers: {},
+    reducers: {
+        removeCategory:removeCat
+    },
     extraReducers: {
         [getCategories.fulfilled]: (state, action) => {
             state.loading = false;
@@ -54,5 +58,7 @@ const categorySlice = createSlice({
     }
 
 });
+
+export const {removeCategory} = categorySlice.actions;
 
 export default categorySlice.reducer;

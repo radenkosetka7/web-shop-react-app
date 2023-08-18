@@ -37,7 +37,7 @@ const GeneralForm = ({onFinish, initialValues}) => {
             <Form.Item wrapperCol={{ offset: 2, span: 14 }} label="Price" name="price" rules={[
                 { required: true, message: 'Please enter a price.' },
             ]}>
-                <InputNumber min={1} />
+                <InputNumber min={0} />
             </Form.Item >
             <Form.Item wrapperCol={{ offset: 2, span: 14 }} label="New" name="condition" rules={[
             ]}>

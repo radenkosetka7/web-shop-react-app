@@ -5,9 +5,8 @@ import categoryService from "../services/category.service";
 import {updateUser} from "./userSlice";
 
 
-export const getAllProducts = createAsyncThunk("products/getAllProducts", async ({value},{rejectWithValue}) => {
+export const getAllProducts = createAsyncThunk("products/getAllProducts", async ({page,size,title},{rejectWithValue}) => {
     try {
-        const { page, size, title } = value;
         return await productService.getAllProducts(page,size,title);
     } catch (err) {
         return rejectWithValue("There is some problem with getting data. Please try later.");

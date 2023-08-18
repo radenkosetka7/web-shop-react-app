@@ -83,7 +83,7 @@ const Profile = () => {
             {user ? (
                 <div className='leftSide'>
                     <div className='userImageContainer'>
-                        <img className='userImage' src={require("../../assets/users/" + user.avatar)} alt="User"/>
+                        <img className='userImage' src={ user.avatar !== null ? require("../../assets/users/" + user.avatar):require("../../assets/user_318-159711.avif")}  alt="User"/>
                     </div>
                     <p className='name'>{user.username}</p>
                     <Button type="primary" className='editButton' onClick={handleEditProfileOpen}>

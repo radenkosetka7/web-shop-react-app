@@ -7,7 +7,7 @@ const token = sessionStorage.getItem('access');
 
 export const getAllProducts = (page,size,title) => {
     return instance
-        .get(`products/`, {
+        .get(`products`, {
             params: {
                 page: page,
                 size: size,
