@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Layout, Pagination, Select, Input, InputNumber, Button} from 'antd';
 import './Home.css';
-import { SearchOutlined } from '@ant-design/icons';
+import {ClearOutlined, SearchOutlined} from '@ant-design/icons';
 import SearchComponent from "../../components/Search/Search";
 import CardComponent from "../../components/Card/CardComponent";
 import CategoryList from "../../components/CategoryList/CategoryList";
@@ -21,13 +21,27 @@ const Home = () => {
     const [page,setPage]=useState(current-1);
     const {categories,selectedCategory} = useSelector((state)=>state.categories);
     const [tempVariable,setTempVariable]=useState(0);
+    const [selectedValue, setSelectedValue] = useState(null);
+    const [location, setLocation] = useState(null);
+    const [priceFrom, setPriceFrom] = useState(0);
+    const [priceTo, setPriceTo] = useState(0);
+    const [attributeValues, setAttributeValues] = useState({});
 
     const [selectedCategoryTemp, setSelectedCategoryTemp] = useState(null);
+
+    const onChangeValue = (value) => {
+        setSelectedValue(value);
+    };
+
+    const handlePriceFromChange = (value) => {
+        setPriceFrom(value);
+    };
+
+    const handlePriceToChange = (value) => {
+        setPriceTo(value);
+    };
     const onChange = (page) => {
         setCurrent(page);
-    };
-    const onChangeValue = (value) => {
-        console.log(`selected ${value}`);
     };
     const onSearch = (value) => {
         setTitle(value);
@@ -37,6 +51,10 @@ const Home = () => {
     const handleCategorySelect = (selectedKeys) => {
         setSelectedCategoryTemp(selectedKeys[0]);
     };
+    const handleLocationChange = (event) => {
+        setLocation(event.target.value);
+    };
+
 
     const onShowSizeChange = (current, pageSize) => {
         setSize(pageSize);
@@ -58,6 +76,26 @@ const Home = () => {
         setPage(newPage-1);
     };
 
+    const handleAttributeChange = (attributeId, value) => {
+        setAttributeValues(prevValues => ({
+            ...prevValues,
+            [attributeId]: value,
+        }));
+    };
+
+    const clearAllFilters = () => {
+        setSelectedValue(null);
+        setLocation(null);
+        setPriceFrom(0);
+        setPriceTo(0);
+        setAttributeValues({});
+    };
+
+
+    const handleClearFilters = () => {
+        clearAllFilters();
+    };
+
     useEffect(()=>{
         if(typeof selectedCategoryTemp === 'string' )
         {
@@ -72,6 +110,8 @@ const Home = () => {
 
     },[selectedCategoryTemp])
 
+
+
     useEffect(()=>
     {
         dispatch(getAllProducts({page,size,title}));
@@ -79,6 +119,16 @@ const Home = () => {
         console.log("sta mi je sizeee title " + size);
 
     },[page,size,title]);
+
+    const handleSubmit = async () => {
+        // console.log("category ime je " + selectedCategory !== null ? selectedCategory.name : null);
+        // console.log("location je " + location );
+        // console.log("selected cat " + selectedCategory.name);
+        // console.log("status jee " + selectedValue);
+        // console.log("price from " + priceFrom);
+        // console.log("price to " + priceTo);
+        console.log("sta su attribute values " + JSON.stringify(attributeValues));
+    }
 
     return (<div style={{height: contentHeight}}>
         <SearchComponent onSearch={onSearch}/>
@@ -88,13 +138,15 @@ const Home = () => {
                    style={{backgroundColor:"#c5c5c5"}}
                    collapsedWidth="0">
                 <h2 style={{color:'black'}}>Filter</h2>
-                <CategoryList categories={categories}  onSelect={handleCategorySelect} setSelectedCategoryTemp={setSelectedCategoryTemp}/>
+                <CategoryList categories={categories}  onSelect={handleCategorySelect}
+                              setSelectedCategoryTemp={setSelectedCategoryTemp}/>
                 <hr/>
                 <br/>
                 <div style={{textAlign:'left', marginLeft:'3%'}}>
                     <Select
                         style={{backgroundColor:'#c5c5c5'}}
                         placeholder="Select a status"
+                        value={selectedValue}
                         onChange={onChangeValue}
                         onSearch={onSearch}
                         filterOption={(input, option) =>
@@ -114,14 +166,14 @@ const Home = () => {
                 <br/>
                 <div style={{textAlign:'left', marginLeft:'3%'}}>
                     <label style={{color:'black',fontSize:'16px'}}>Location</label>
-                    <Input/>
+                    <Input value={location} onChange={handleLocationChange}/>
                 </div>
                 <br/>
                 <div style={{textAlign:'left', marginLeft:'3%'}}>
                     <label style={{color:'black',fontSize:'16px'}}>Price</label>
                     <br/>
-                    <InputNumber min={0} style={{width:'50%'}} placeholder="Price from"/>
-                    <InputNumber style={{width:'50%'}}  placeholder="Price to"/>
+                    <InputNumber value={priceFrom} min={0} onChange={handlePriceFromChange} style={{width:'50%'}} placeholder="Price from"/>
+                    <InputNumber value={priceTo} style={{width:'50%'}} min={priceFrom} onChange={handlePriceToChange}  placeholder="Price to"/>
                 </div>
                 <br/>
                 <br/>
@@ -131,8 +183,20 @@ const Home = () => {
                             <div key={attribute.id} style={{textAlign:'left', marginLeft:'3%'}}>
                                 <label style={{ color: 'black', fontSize: '16px' }}>{attribute.name}</label>
                                 <br/>
-                                {attribute.type === 'STRING' && <Input />}
-                                {attribute.type === 'NUMBER' || attribute.type === 'DOUBLE' && <InputNumber />}
+                                {attribute.type === 'STRING' &&
+                                    <Input value={attributeValues[attribute.id]?.value || null} onChange={(e) => {
+                                        const newValue = e.target.value;
+                                        setAttributeValues(prevValues => ({
+                                            ...prevValues,
+                                            [attribute.id]: { id: attribute.id, name: attribute.name, type: attribute.type, value: newValue },
+                                        }));
+                                    }} />}
+                                {attribute.type === 'NUMBER' || attribute.type === 'DOUBLE' &&
+                                    <InputNumber value={attributeValues[attribute.id]?.value || 0} min={0}
+                                        onChange={(value) =>setAttributeValues(prevValues => ({
+                                            ...prevValues,
+                                            [attribute.id]: { id: attribute.id, name: attribute.name, type: attribute.type, value: value },
+                                        }))}/>}
                             </div>
                         ))}
 
@@ -140,8 +204,13 @@ const Home = () => {
                 }
                 <br/>
                 <br/>
-                <Button type="primary" icon={<SearchOutlined />}>
+                <Button onClick={handleSubmit} type="primary" icon={<SearchOutlined />}>
                     Search
+                </Button>
+                <br/>
+                <br/>
+                <Button onClick={handleClearFilters}  type="default" icon={<ClearOutlined />}>
+                    Clear filters
                 </Button>
             </Sider>
             <Layout>
