@@ -25,7 +25,12 @@ export const getProductByid = (idProduct) => {
 
 export const searchProduct = (page, size, searchProduct) => {
     return instance
-        .post(`products/searchProducts?page=${page}&size=${size}`, searchProduct)
+        .post(`products/searchProducts`, searchProduct, {
+            params: {
+                page: page,
+                size: size,
+            },
+        })
         .then((results) => results.data);
 };
 
