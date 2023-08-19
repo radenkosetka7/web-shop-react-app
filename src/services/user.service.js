@@ -30,7 +30,7 @@ export const changePassword = (idUser,dataToUpdate) => {
         .then((results) => results.data);
 };
 
-export const getAllProductsForBuyer = (page,size,title) => {
+export const getAllProductsForBuyer = (page,size) => {
     return instance
         .get(`users/products/purchased`,{
             headers:{
@@ -39,13 +39,12 @@ export const getAllProductsForBuyer = (page,size,title) => {
             params: {
                 page: page,
                 size: size,
-                title: title
             },
         })
         .then((results) => results.data);
 };
 
-export const getAllProductsForSeller = (page,title,size,finished) => {
+export const getAllProductsForSeller = (page,size,finished) => {
     return instance
         .get(`users/products/sold`, {
             headers:{
@@ -55,7 +54,6 @@ export const getAllProductsForSeller = (page,title,size,finished) => {
                 page: page,
                 size: size,
                 finished: finished,
-                title: title
             },
         })
         .then((results) => results.data);

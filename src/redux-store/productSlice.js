@@ -84,19 +84,17 @@ export const getAllProductsForCategory = createAsyncThunk("products/getAllProduc
     }
 });
 
-export const getAllProductsForBuyer = createAsyncThunk("products/getAllProductsForBuyer", async ({value},{rejectWithValue}) => {
+export const getAllProductsForBuyer = createAsyncThunk("products/getAllProductsForBuyer", async ({page,size},{rejectWithValue}) => {
     try {
-        const { page, size, title } = value;
-        return await userService.getAllProductsForBuyer(page,size,title);
+        return await userService.getAllProductsForBuyer(page,size);
     } catch (err) {
         return rejectWithValue("There is some problem with getting data. Please try later.");
     }
 });
 
-export const getAllProductsForSeller = createAsyncThunk("products/getAllProductsForBuyer", async ({value},{rejectWithValue}) => {
+export const getAllProductsForSeller = createAsyncThunk("products/getAllProductsForBuyer", async ({page,size,finished},{rejectWithValue}) => {
     try {
-        const { page, size, title, finished } = value;
-        return await userService.getAllProductsForSeller(page,size,title,finished);
+        return await userService.getAllProductsForSeller(page,size,finished);
     } catch (err) {
         return rejectWithValue("There is some problem with getting data. Please try later.");
     }
