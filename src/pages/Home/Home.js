@@ -8,7 +8,7 @@ import CategoryList from "../../components/CategoryList/CategoryList";
 import jwtDecode from "jwt-decode";
 import {getUser} from "../../redux-store/userSlice";
 import {useDispatch, useSelector} from "react-redux";
-import {getAllProducts} from "../../redux-store/productSlice";
+import {getAllProducts, searchProduct} from "../../redux-store/productSlice";
 import {getCategories, getCategory, removeCategory} from "../../redux-store/categorySlice";
 const { Footer, Sider, Content } = Layout;
 const Home = () => {
@@ -121,13 +121,32 @@ const Home = () => {
     },[page,size,title]);
 
     const handleSubmit = async () => {
-        // console.log("category ime je " + selectedCategory !== null ? selectedCategory.name : null);
-        // console.log("location je " + location );
-        // console.log("selected cat " + selectedCategory.name);
-        // console.log("status jee " + selectedValue);
-        // console.log("price from " + priceFrom);
-        // console.log("price to " + priceTo);
-        console.log("sta su attribute values " + JSON.stringify(attributeValues));
+
+        const attributeList = Object.values(attributeValues).map(attrData => {
+            return {
+                attribute: {
+                    id: attrData.id,
+                    name: attrData.name,
+                    type: attrData.type
+                },
+                value: attrData.value
+            };
+        });
+
+        const searchData = {
+            categoryName: typeof selectedCategoryTemp === 'string' ? selectedCategory.name : null,
+            location: location !== null ? location : null,
+            productStatus:  selectedValue !== null ? (selectedValue === '0' ? true : false) : null,
+            priceFrom: priceFrom !== 0 ? priceFrom : null,
+            priceTo: priceTo !==0 ? priceTo : null,
+            attributeValueList:attributeList.length > 0 ? attributeList : null
+        };
+        console.log("sta je searchhh " + JSON.stringify(searchData));
+        setPage(0);
+        setSize(10);
+       const response = await dispatch(searchProduct({page:page,size:size,value:searchData}));
+       console.log("sta je reponse size " + JSON.stringify(response.payload.content));
+
     }
 
     return (<div style={{height: contentHeight}}>

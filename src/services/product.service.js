@@ -23,11 +23,12 @@ export const getProductByid = (idProduct) => {
         .then((results) => results.data);
 };
 
-export const searchProduct = (page,size,searchProduct) => {
+export const searchProduct = (page, size, searchProduct) => {
     return instance
-        .post(`products/searchProducts?page=${page}&size=${size}`,searchProduct)
+        .post(`products/searchProducts?page=${page}&size=${size}`, searchProduct)
         .then((results) => results.data);
 };
+
 
 export const addProduct = (productData) => {
     return authInstance

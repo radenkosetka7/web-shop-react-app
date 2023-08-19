@@ -30,8 +30,9 @@ export const createProduct = createAsyncThunk("products/createProduct", async ({
 });
 
 export const searchProduct = createAsyncThunk("products/searchProduct", async ({page,size,value},{rejectWithValue}) => {
+    console.log(" page size value " + page + " " + size + " " + JSON.stringify(value));
     try {
-        return await productService.getAllProducts(page,size,value);
+        return await productService.searchProduct(page,size,value);
     } catch (err) {
         return rejectWithValue("There is some problem with getting data. Please try later.");
     }
