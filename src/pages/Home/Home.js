@@ -21,13 +21,13 @@ const Home = () => {
     const [size, setSize] = useState(10);
     const [page, setPage] = useState(current - 1);
     const {categories, selectedCategory} = useSelector((state) => state.categories);
-    const [tempVariable, setTempVariable] = useState(0);
+    const [removeCategoryFlag, setRemoveCategoryFlag] = useState(0);
     const [selectedValue, setSelectedValue] = useState(null);
     const [location, setLocation] = useState(null);
     const [priceFrom, setPriceFrom] = useState(0);
     const [priceTo, setPriceTo] = useState(0);
     const [attributeValues, setAttributeValues] = useState({});
-    const [filterClicked, setFilterClicked] = useState(false);
+    const [searchAttrsClicked, setSearchAttrsClicked] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
 
 
@@ -38,7 +38,7 @@ const Home = () => {
     };
 
 
-    const handleSaveUpdate = () => {
+    const handleChangeRefreshKey = () => {
         setRefreshKey((prevKey) => prevKey + 1);
     };
     const handlePriceFromChange = (value) => {
@@ -90,7 +90,8 @@ const Home = () => {
         }));
     };
 
-    const clearAllFilters = () => {
+
+    const handleClearFilters = () => {
         setSelectedValue(null);
         setLocation(null);
         setPriceFrom(0);
@@ -98,20 +99,15 @@ const Home = () => {
         setAttributeValues({});
         setCurrent(1);
         setPage(0);
-        setFilterClicked(false);
-    };
-
-
-    const handleClearFilters = () => {
-        clearAllFilters();
+        setSearchAttrsClicked(false);
     };
 
     useEffect(() => {
         if (typeof selectedCategoryTemp === 'string') {
-            setTempVariable(1);
+            setRemoveCategoryFlag(1);
             const parsedNumber = parseInt(selectedCategoryTemp);
             dispatch(getCategory({value: parsedNumber}));
-        } else if (tempVariable !== 0) {
+        } else if (removeCategoryFlag !== 0) {
             dispatch(removeCategory());
         }
 
@@ -128,7 +124,7 @@ const Home = () => {
         };
     });
     let searchData = {
-        categoryName: typeof selectedCategoryTemp === 'string' ? selectedCategory.name : null,
+        categoryName: selectedCategory && typeof selectedCategoryTemp === 'string' ? selectedCategory.name : null,
         title: title === "" ? null : title,
         location: location !== null ? location : null,
         productStatus: selectedValue !== null ? (selectedValue === '1' ? true : false) : null,
@@ -139,19 +135,16 @@ const Home = () => {
 
     useEffect(() => {
 
-        if (!filterClicked) {
+        if (!searchAttrsClicked) {
             dispatch(getAllProducts({page, size, title}));
 
-        }
-        else if(filterClicked)
-        {
+        } else if (searchAttrsClicked) {
             const response = dispatch(searchProduct({page: page, size: size, value: searchData}));
             if (response.error) {
-                setFilterClicked(false);
+                setSearchAttrsClicked(false);
             } else {
-                if(!filterClicked)
-                {
-                    setFilterClicked(true);
+                if (!searchAttrsClicked) {
+                    setSearchAttrsClicked(true);
                     setCurrent(1);
                     setPage(0);
                 }
@@ -159,39 +152,11 @@ const Home = () => {
         }
 
 
-    }, [page, size, title,filterClicked,refreshKey]);
+    }, [page, size, title, searchAttrsClicked, refreshKey]);
 
     const handleSubmit = async () => {
-
-        // const attributeList = Object.values(attributeValues).map(attrData => {
-        //     return {
-        //         attribute: {
-        //             id: attrData.id,
-        //             name: attrData.name,
-        //             type: attrData.type
-        //         },
-        //         value: attrData.value
-        //     };
-        // });
-
-        handleSaveUpdate();
-        setFilterClicked(true);
-        // searchData = {
-        //     categoryName: typeof selectedCategoryTemp === 'string' ? selectedCategory.name : null,
-        //     location: location !== null ? location : null,
-        //     productStatus: selectedValue !== null ? (selectedValue === '0' ? true : false) : null,
-        //     priceFrom: priceFrom !== 0 ? priceFrom : null,
-        //     priceTo: priceTo !== 0 ? priceTo : null,
-        //     attributeValueList: attributeList.length > 0 ? attributeList : null
-        // };
-        // const response = await dispatch(searchProduct({page: page, size: size, value: searchData}));
-        // if (response.error) {
-        //     setFilterClicked(false);
-        // } else {
-        //     setFilterClicked(true);
-        //     setCurrent(1);
-        //     setPage(0);
-        // }
+        handleChangeRefreshKey();
+        setSearchAttrsClicked(true);
 
     }
 
@@ -300,7 +265,7 @@ const Home = () => {
                                 ))
                             ) :
                             (
-                                <p style={{color:"black", fontWeight:"bold",fontSize:"20px"}}>No products found</p>
+                                <p style={{color: "black", fontWeight: "bold", fontSize: "20px"}}>No products found</p>
                             )}
                     </div>
                 </Content>

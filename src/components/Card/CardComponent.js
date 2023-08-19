@@ -7,7 +7,7 @@ const CardComponent = ({product}) => {
 
 
     return (
-        <Card
+       <Card
             hoverable
             className='card'
             cover={<img alt="example" className='image' alt="Logo"
