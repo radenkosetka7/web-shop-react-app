@@ -53,18 +53,33 @@ const Profile = () => {
     };
 
     const handleActiveProductsOpen = () => {
+        if(current>1)
+        {
+            setCurrent(1);
+            setPage(0);
+        }
         setActiveProducts(true);
         setSoldProducts(false);
         setPurchasedProducts(false);
     };
 
     const handleSoldProductsOpen = () => {
+        if(current>1)
+        {
+            setCurrent(1);
+            setPage(0);
+        }
         setSoldProducts(true);
         setActiveProducts(false);
         setPurchasedProducts(false);
     };
 
     const handlePurchasedProductsOpen = () => {
+        if(current>1)
+        {
+            setCurrent(1);
+            setPage(0);
+        }
         setPurchasedProducts(true);
         setActiveProducts(false);
         setSoldProducts(false);
@@ -103,7 +118,7 @@ const Profile = () => {
        {
            dispatch(getAllProductsForBuyer({page:page,size:size}))
        }
-    },[activeProducts,soldProducts,purchasedProducts]);
+    },[activeProducts,soldProducts,purchasedProducts,page,size]);
 
 
     return (<div style={{height: contentHeight}}>

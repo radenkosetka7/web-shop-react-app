@@ -83,14 +83,6 @@ const Home = () => {
         setPage(newPage - 1);
     };
 
-    const handleAttributeChange = (attributeId, value) => {
-        setAttributeValues(prevValues => ({
-            ...prevValues,
-            [attributeId]: value,
-        }));
-    };
-
-
     const handleClearFilters = () => {
         setSelectedValue(null);
         setLocation(null);
