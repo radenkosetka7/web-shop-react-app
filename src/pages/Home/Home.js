@@ -8,7 +8,7 @@ import CategoryList from "../../components/CategoryList/CategoryList";
 import jwtDecode from "jwt-decode";
 import {getUser} from "../../redux-store/userSlice";
 import {useDispatch, useSelector} from "react-redux";
-import {getAllProducts, searchProduct} from "../../redux-store/productSlice";
+import {getAllProducts, searchProduct,removeProduct} from "../../redux-store/productSlice";
 import {getCategories, getCategory, removeCategory} from "../../redux-store/categorySlice";
 
 const {Footer, Sider, Content} = Layout;
@@ -17,7 +17,7 @@ const Home = () => {
     const [contentHeight, setContentHeight] = useState('calc(100vh - 125px)');
     const [current, setCurrent] = useState(1);
     const [title, setTitle] = useState("");
-    const {products} = useSelector((state) => state.products);
+    const {products,selectedProduct} = useSelector((state) => state.products);
     const [size, setSize] = useState(10);
     const [page, setPage] = useState(current - 1);
     const {categories, selectedCategory} = useSelector((state) => state.categories);
@@ -127,6 +127,10 @@ const Home = () => {
 
     useEffect(() => {
 
+        if(selectedProduct !== null)
+        {
+            dispatch(removeProduct());
+        }
         if (!searchAttrsClicked) {
             dispatch(getAllProducts({page, size, title}));
 

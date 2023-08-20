@@ -3,6 +3,7 @@ import productService from "../services/product.service";
 import userService from "../services/user.service";
 import categoryService from "../services/category.service";
 import {updateUser} from "./userSlice";
+import authService from "../services/auth.service";
 
 
 export const getAllProducts = createAsyncThunk("products/getAllProducts", async ({page,size,title},{rejectWithValue}) => {
@@ -101,6 +102,10 @@ export const getAllProductsForSeller = createAsyncThunk("products/getAllProducts
 });
 
 
+const removeProductFunction = (state) => {
+    state.selectedProduct = null;
+}
+
 
 
 const productSlice = createSlice({
@@ -109,7 +114,9 @@ const productSlice = createSlice({
         products:[],
         selectedProduct:null
     },
-    reducers:{},
+    reducers:{
+        removeProduct:removeProductFunction
+    },
     extraReducers: {
         [getAllProducts.fulfilled]: (state, action) => {
             state.loading = false;
@@ -230,5 +237,7 @@ const productSlice = createSlice({
     }
 
 })
+
+export const {removeProduct} = productSlice.actions;
 
 export default productSlice.reducer;
