@@ -15,6 +15,7 @@ export const getAllProducts = createAsyncThunk("products/getAllProducts", async 
 });
 
 export const getProduct = createAsyncThunk("products/getProduct", async ({value},{rejectWithValue}) => {
+    console.log("dolazis li ovdje");
     try {
         return await productService.getProductByid(value);
     } catch (err) {

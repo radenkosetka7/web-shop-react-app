@@ -169,11 +169,13 @@ const Profile = () => {
             </Sider>
             {(activeProducts || soldProducts || purchasedProducts) && (
                 <Layout>
-                    <Content style={{textAlign:'center', color:'#fff', backgroundColor:'#f3f1f1'}}>
-                        <div style={{display: 'flex', flexWrap: 'wrap'}}>
+                    <Content className='contentStyle'>
+                        <div className='contentDiv'>
                             {products && products.length !== 0 ? (
                                     products.content.map(product => (
+                                        <div className='productCard'>
                                         <CardComponent key={product.id} product={product}/>
+                                        </div>
                                     ))
                                 ) :
                                 (
@@ -181,7 +183,7 @@ const Profile = () => {
                                 )}
                         </div>
                     </Content>
-                    <Footer style={{backgroundColor: "#5c8d89", textAlign: 'center', color: 'fff'}}>
+                    <Footer style={{backgroundColor: "#1d8f8a", textAlign: 'center', color: 'fff'}}>
                         <Pagination
                             showSizeChanger
                             onShowSizeChange={onShowSizeChange}

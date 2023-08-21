@@ -254,10 +254,12 @@ const Home = () => {
             </Sider>
             <Layout>
                 <Content className='contentStyle'>
-                    <div style={{display: 'flex', flexWrap: 'wrap'}}>
+                    <div className='contentDiv'>
                         {products && products.length !== 0 ? (
                                 products.content.map(product => (
+                                    <div className='productCard'>
                                     <CardComponent key={product.id} product={product}/>
+                                    </div>
                                 ))
                             ) :
                             (
@@ -265,7 +267,7 @@ const Home = () => {
                             )}
                     </div>
                 </Content>
-                <Footer style={{backgroundColor: "#5c8d89"}} className='footerStyle'>
+                <Footer style={{backgroundColor: "#1d8f8a"}} className='footerStyle'>
                     {products && products.totalElements && (
                         <Pagination
                             showSizeChanger

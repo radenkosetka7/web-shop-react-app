@@ -1,32 +1,136 @@
-import React, {useState} from 'react';
-import {Layout, Space} from 'antd';
-
-const {Header, Footer, Sider, Content} = Layout;
-
-const siderStyle = {
-    textAlign: 'center',
-    color: '#fff',
-    backgroundColor: '#3ba0e9',
-};
+import React, {useEffect, useState} from 'react';
+import {Button, Card, Input, Layout, Space} from 'antd';
+import {useDispatch, useSelector} from "react-redux";
+import {useParams} from "react-router-dom";
+import SimpleImageSlider from "react-simple-image-slider";
+import {getProduct} from "../../redux-store/productSlice";
+import './ViewProduct.css'
+import EditProfile from "../EditProfile/EditProfile";
+import PurchaseProduct from "../PurchaseProduct/PurchaseProduct";
+import jwtDecode from "jwt-decode";
+import {getUser} from "../../redux-store/userSlice";
+const {Sider, Content} = Layout;
 
 const ViewProduct = () => {
 
     const [contentHeight, setContentHeight] = useState('calc(100vh - 73px)');
+    const dispatch=useDispatch();
+    const {selectedProduct} = useSelector((state)=>state.products);
+    const {id} = useParams();
+    const [buyModal,setBuyModal] = useState(false);
+    const {authenticated} = useSelector((state)=>state.users);
+
+    const formattedDate = (date) =>
+        new Date(date).toLocaleDateString('en-US', {
+            month: "2-digit",
+            day: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true,
+        });
+
+
+    const handleBuyModalOpen = () => {
+        setBuyModal(true);
+    };
+
+    const handleBuyModalClose = () => {
+        setBuyModal(false);
+    };
+
+    useEffect(()=>
+    {
+        const token = sessionStorage.getItem('access');
+        if (token !== null) {
+            const decodedToken = jwtDecode(token);
+            const id = parseInt(decodedToken.jti);
+            dispatch(getUser({id: id}));
+
+        }
+        const value=parseInt(id);
+        dispatch(getProduct({value:value}));
+    },[]);
+
     return (
         <div style={{height: contentHeight}}>
-            <Layout style={{minHeight: '100%'}}>
-                <Layout style={{backgroundColor:'#ABC2E8'}}>
-                    <Content style={{textAlign:'left',color:'#000',marginLeft:'15%'}}>Content</Content>
+                <Layout style={{minHeight: '100%'}}>
+                <Layout style={{backgroundColor:'#c2bdba'}}>
+
                     <Sider style={{textAlign: 'center',
-                        color: 'black',
-                        backgroundColor: '#FFFDDE',
+                        color: '#dad7d0',
+                        backgroundColor: '#5e5858',
                     }} breakpoint="lg"
                            width='25%'
                            collapsedWidth="0">
                         <h2>All comments</h2>
                     </Sider>
+                    <Content style={{textAlign:'left',color:'#000',marginLeft:'10%',marginTop:'3%', overflow:'auto'}}>
+                        {selectedProduct && (
+                            <div>
+                                <Card style={{width:'fit-content%',backgroundColor:'transparent', marginRight:'10%'}}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <h2>{selectedProduct.title}</h2>
+                                        {authenticated &&<Button onClick={handleBuyModalOpen} type={"primary"}>Buy product</Button> }
+                                    </div>
+                                    <p className='pView'>{selectedProduct.price} BAM</p>
+                                    <p>{selectedProduct.category.name}</p>
+                                    <hr/>
+                                    <br/>
+                                    <SimpleImageSlider
+                                        images={selectedProduct.images.map((image)=>({
+                                            url: require('../../assets/products/' + image.productImage)
+                                        }))}
+                                        showNavs={true}
+                                        showBullets
+                                        navStyle={{
+                                            arrowRight: {
+                                                color: 'white', },
+                                            arrowLeft: {
+                                                color: 'white',
+                                            }
+                                        }}
+                                        width='95%'
+                                        height={500}
+                                    />
+                                </Card>
+                                <br/>
+                                <Card style={{width:'fit-content%',backgroundColor:'transparent', marginRight:'10%'}}>
+                                    <h2>Details</h2>
+                                    <hr/>
+                                    <br/>
+                                    <Input value={`Location: ${selectedProduct.city}`}
+                                           readOnly style={{width:'fit-content',marginRight:'10px',marginBottom:'10px'}} />
+                                    <Input value={`Condition: ${selectedProduct.productStatus === false ? 'New' : 'Used' }`}
+                                           readOnly style={{width:'fit-content',marginRight:'10px',marginBottom:'10px'}} />
+                                    <Input value={`Contact: ${selectedProduct.contact}`}
+                                           readOnly style={{width:'fit-content',marginRight:'10px',marginBottom:'10px'}} />
+                                    <Input value={`Release date : ${formattedDate(selectedProduct.creationDate)}}`}
+                                           readOnly style={{width:'250px',marginRight:'10px',marginBottom:'10px'}} />
+                                    {selectedProduct.attributeValues.map((attribute, index) => (
+                                        <Input
+                                            key={index}
+                                            value={`${attribute.attribute.name}: ${attribute.value}`}
+                                            readOnly
+                                            style={{ width: 'fit-content', marginRight: '10px', marginBottom: '10px' }}
+                                        />
+                                    ))}
+                                    <br/>
+                                    <br/>
+                                    <h2>Description</h2>
+                                    <hr/>
+                                    <br/>
+                                    <p>{selectedProduct.description}</p>
+                                </Card>
+                                <br/>
+                                <br/>
+                            </div>
+                        )}
+                    </Content>
                 </Layout>
             </Layout>
+            {buyModal && <PurchaseProduct show={buyModal} onClose={handleBuyModalClose}/>}
         </div>
     )
 

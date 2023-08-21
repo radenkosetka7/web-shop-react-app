@@ -19,7 +19,7 @@ export const getAllProducts = (page,size,title) => {
 
 export const getProductByid = (idProduct) => {
     return instance
-        .get(`products/${idProduct}/`)
+        .get(`products/${idProduct}`)
         .then((results) => results.data);
 };
 
