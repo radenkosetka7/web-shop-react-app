@@ -48,9 +48,7 @@ const Home = () => {
     const handlePriceToChange = (value) => {
         setPriceTo(value);
     };
-    const onChange = (page) => {
-        setCurrent(page);
-    };
+
     const onSearch = (value) => {
         setTitle(value);
     };
@@ -131,7 +129,8 @@ const Home = () => {
         {
             dispatch(removeProduct());
         }
-        if (!searchAttrsClicked) {
+        if (!searchAttrsClicked)
+        {
             dispatch(getAllProducts({page, size, title}));
 
         } else if (searchAttrsClicked) {
@@ -258,7 +257,7 @@ const Home = () => {
                         {products && products.length !== 0 ? (
                                 products.content.map(product => (
                                     <div className='productCard'>
-                                    <CardComponent key={product.id} product={product}/>
+                                    <CardComponent key={product.id} product={product} handleChangeRefreshKey={handleChangeRefreshKey}/>
                                     </div>
                                 ))
                             ) :

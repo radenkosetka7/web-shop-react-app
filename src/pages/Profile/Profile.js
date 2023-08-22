@@ -38,7 +38,7 @@ const Profile = () => {
             dispatch(getUser({id: id}));
 
         }
-    }, [refreshKey]);
+    }, []);
 
     const onShowSizeChange = (current, pageSize) => {
         setSize(pageSize);
@@ -86,11 +86,11 @@ const Profile = () => {
     };
     const handleEditProfileClose = () => {
         setProfileModal(false);
-        handleSaveUpdate();
+        handleChangeRefreshKey();
 
     };
 
-    const handleSaveUpdate = () => {
+    const handleChangeRefreshKey = () => {
         setRefreshKey((prevKey) => prevKey + 1);
     };
 
@@ -105,7 +105,8 @@ const Profile = () => {
 
     useEffect(()=>
     {
-       if(activeProducts)
+
+        if(activeProducts)
        {
            dispatch(getAllProductsForSeller({page:page,size:size,finished:0}));
 
@@ -118,7 +119,8 @@ const Profile = () => {
        {
            dispatch(getAllProductsForBuyer({page:page,size:size}))
        }
-    },[activeProducts,soldProducts,purchasedProducts,page,size]);
+
+    },[activeProducts,soldProducts,purchasedProducts,page,size,refreshKey]);
 
 
     return (<div style={{height: contentHeight}}>
@@ -174,7 +176,7 @@ const Profile = () => {
                             {products && products.length !== 0 ? (
                                     products.content.map(product => (
                                         <div className='productCard'>
-                                        <CardComponent key={product.id} product={product}/>
+                                        <CardComponent key={product.id} product={product} handleChangeRefreshKey={handleChangeRefreshKey}/>
                                         </div>
                                     ))
                                 ) :
