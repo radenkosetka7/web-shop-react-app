@@ -12,6 +12,7 @@ import {useDispatch} from "react-redux";
 import jwtDecode from "jwt-decode";
 import Profile from "./pages/Profile/Profile";
 import ViewProduct from "./pages/ViewProduct/ViewProduct";
+import PrivateRoutes from "./util/PrivateRoutes";
 
 function App() {
 
@@ -44,11 +45,13 @@ function App() {
       <Navbar/>
           <Routes>
 
+              <Route element={<PrivateRoutes/>}>
+                  <Route path="/myProfile" element={<Profile/>} exact/>
+              </Route>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} exact/>
               <Route path="/register" element={<Register/>} exact/>
               <Route path="/activateAccount" element={<ActivateAccount/>} exact/>
-              <Route path="/myProfile" element={<Profile/>} exact/>
               <Route path="/:id" element={<ViewProduct/>}/>
               <Route path="*" element={<NotFound/>}/>
           </Routes>
