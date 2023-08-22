@@ -3,9 +3,8 @@ import {Button, Card, Input, Layout, Space} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 import SimpleImageSlider from "react-simple-image-slider";
-import {getProduct} from "../../redux-store/productSlice";
+import {getProduct, purchaseProduct} from "../../redux-store/productSlice";
 import './ViewProduct.css'
-import EditProfile from "../EditProfile/EditProfile";
 import PurchaseProduct from "../PurchaseProduct/PurchaseProduct";
 import jwtDecode from "jwt-decode";
 import {getUser} from "../../redux-store/userSlice";
@@ -18,7 +17,8 @@ const ViewProduct = () => {
     const {selectedProduct} = useSelector((state)=>state.products);
     const {id} = useParams();
     const [buyModal,setBuyModal] = useState(false);
-    const {authenticated} = useSelector((state)=>state.users);
+    const [refreshKey, setRefreshKey] = useState(0);
+    const {authenticated,user} = useSelector((state)=>state.users);
 
     const formattedDate = (date) =>
         new Date(date).toLocaleDateString('en-US', {
@@ -40,6 +40,17 @@ const ViewProduct = () => {
         setBuyModal(false);
     };
 
+    const handleSavePurchase = () => {
+        setRefreshKey((prevKey) => prevKey + 1);
+    };
+    const onFinish = () => {
+        handleBuyModalClose();
+        dispatch(purchaseProduct({id:id}));
+        handleSavePurchase();
+    }
+
+
+
     useEffect(()=>
     {
         const token = sessionStorage.getItem('access');
@@ -51,7 +62,7 @@ const ViewProduct = () => {
         }
         const value=parseInt(id);
         dispatch(getProduct({value:value}));
-    },[]);
+    },[refreshKey]);
 
     return (
         <div style={{height: contentHeight}}>
@@ -72,7 +83,7 @@ const ViewProduct = () => {
                                 <Card style={{width:'fit-content%',backgroundColor:'transparent', marginRight:'10%'}}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <h2>{selectedProduct.title}</h2>
-                                        {authenticated &&<Button onClick={handleBuyModalOpen} type={"primary"}>Buy product</Button> }
+                                        {authenticated && selectedProduct.finished !== 0 && selectedProduct.userSeller.id !== user.id && <Button onClick={handleBuyModalOpen} type={"primary"}>Buy product</Button> }
                                     </div>
                                     <p className='pView'>{selectedProduct.price} BAM</p>
                                     <p>{selectedProduct.category.name}</p>
@@ -130,7 +141,7 @@ const ViewProduct = () => {
                     </Content>
                 </Layout>
             </Layout>
-            {buyModal && <PurchaseProduct show={buyModal} onClose={handleBuyModalClose}/>}
+            {buyModal && <PurchaseProduct show={buyModal} onClose={handleBuyModalClose} onFinish={onFinish}/>}
         </div>
     )
 
