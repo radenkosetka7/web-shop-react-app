@@ -22,14 +22,12 @@ const ActivateAccount = () => {
             code: activateAccData.code,
             username: user
         };
-        console.log("sta mi je data " + accData.username);
         const response = await activateAccount(accData);
         if (response.data === "") {
             setResponseText("Invalid code. Please try again.");
             return;
         }
-        console.log("sta je id odgovora " + response.data.id);
-        dispatch(getUser({id: response.data.id}));
+        sessionStorage.setItem('access', response.data.token);
         nav('/');
     }
 

@@ -4,3 +4,12 @@
     font-size: 20px;
 
 }
+
+.sendReply {
+    display: flex;
+    justify-content: left;
+    align-items: flex-start;
+    width: 100%;
+    flex-direction: column;
+
+}

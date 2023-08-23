@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Card, Input, Layout, Space} from 'antd';
+import React, {useEffect, useRef, useState} from 'react';
+import {Avatar, Button, Card, Form, Input, Layout, List} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 import SimpleImageSlider from "react-simple-image-slider";
@@ -19,6 +19,11 @@ const ViewProduct = () => {
     const [buyModal,setBuyModal] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
     const {authenticated,user} = useSelector((state)=>state.users);
+    const [showAddComment, setShowAddComment] = useState(false);
+    const [isDisabled, setIsDisabled] = useState(false);
+    const [showErrorMessage, setShowErrorMessage] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    const formRefReply = useRef(null);
 
     const formattedDate = (date) =>
         new Date(date).toLocaleDateString('en-US', {
@@ -39,6 +44,9 @@ const ViewProduct = () => {
     const handleBuyModalClose = () => {
         setBuyModal(false);
     };
+    const handleClickReply = (e) => {
+        e.stopPropagation();
+    };
 
     const handleSavePurchase = () => {
         setRefreshKey((prevKey) => prevKey + 1);
@@ -48,7 +56,32 @@ const ViewProduct = () => {
         dispatch(purchaseProduct({id:id}));
         handleSavePurchase();
     }
-
+    const handleFormReply = async (values, idKomentara) => {
+        // console.log("handle form reply " + JSON.stringify(values));
+        //
+        // try {
+        //     console.log("values " + JSON.stringify(values));
+        //
+        //     const answerData = {
+        //         odgovor: values.replyComm,
+        //     };
+        //     console.log("questionData " + JSON.stringify(answerData) + " id " + idKomentara);
+        //     const response = await dispatch(sendAnswer({id: idKomentara, answerData: answerData}));
+        //     console.log("response " + JSON.stringify(response));
+        // } catch (error) {
+        //     setShowErrorMessage(true);
+        //     setErrorMessage("Reply on comment failed.");
+        //     setTimeout(() => {
+        //         setShowErrorMessage(false);
+        //         setErrorMessage("");
+        //         setIsDisabled(false);
+        //
+        //     }, 1500);
+        //     console.log("error" + error);
+        // } finally {
+        //     setRefreshKey((prevKey) => prevKey + 1);
+        // }
+    }
 
 
     useEffect(()=>
@@ -76,6 +109,11 @@ const ViewProduct = () => {
                            width='25%'
                            collapsedWidth="0">
                         <h2>All comments</h2>
+                        <br/>
+                        {selectedProduct && selectedProduct.comments.length === 0 && <h3>No comments currently available</h3>}
+                        {authenticated && selectedProduct && user.id !== selectedProduct.userSeller.id && (
+                            <Button type='primary'>Add comment</Button>
+                        )}
                     </Sider>
                     <Content style={{textAlign:'left',color:'#000',marginLeft:'10%',marginTop:'3%', overflow:'auto'}}>
                         {selectedProduct && (

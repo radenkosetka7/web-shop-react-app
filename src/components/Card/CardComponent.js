@@ -18,7 +18,7 @@ const CardComponent = ({product, handleChangeRefreshKey}) => {
     const handleDeleteClick = async (e) => {
         e.preventDefault();
         const id = product.id;
-        const response = dispatch(deleteProduct({id: id}));
+        dispatch(deleteProduct({id: id}));
         await new Promise(resolve => setTimeout(resolve, 500));
         handleChangeRefreshKey();
     };
