@@ -13,3 +13,12 @@
     flex-direction: column;
 
 }
+
+.replayMessage {
+    display: flex;
+    justify-content: left;
+    align-items: flex-start;
+    width: 100%;
+    flex-direction: column;
+
+}

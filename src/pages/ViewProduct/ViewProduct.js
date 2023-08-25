@@ -3,27 +3,31 @@ import {Avatar, Button, Card, Form, Input, Layout, List} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 import SimpleImageSlider from "react-simple-image-slider";
-import {getProduct, purchaseProduct} from "../../redux-store/productSlice";
+import {commentProduct, getProduct, purchaseProduct} from "../../redux-store/productSlice";
 import './ViewProduct.css'
 import PurchaseProduct from "../PurchaseProduct/PurchaseProduct";
 import jwtDecode from "jwt-decode";
 import {getUser} from "../../redux-store/userSlice";
 const {Sider, Content} = Layout;
+const { TextArea } = Input;
+
 
 const ViewProduct = () => {
 
     const [contentHeight, setContentHeight] = useState('calc(100vh - 73px)');
     const dispatch=useDispatch();
+    const [question,setQuestion]=useState('');
     const {selectedProduct} = useSelector((state)=>state.products);
     const {id} = useParams();
     const [buyModal,setBuyModal] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
     const {authenticated,user} = useSelector((state)=>state.users);
-    const [showAddComment, setShowAddComment] = useState(false);
+    const [showInsertCommentar, setShowInsertCommentar] = useState(false);
+    const formRef = useRef(null);
+    const formRefReply = useRef(null);
     const [isDisabled, setIsDisabled] = useState(false);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const formRefReply = useRef(null);
 
     const formattedDate = (date) =>
         new Date(date).toLocaleDateString('en-US', {
@@ -83,6 +87,23 @@ const ViewProduct = () => {
         // }
     }
 
+    const askQuestion = async () => {
+
+        console.log("pitanje je staa " + question);
+        if (question !== '') {
+            const commentObject = {
+                question: question
+            };
+            setIsDisabled(true);
+            dispatch(commentProduct({id: id, value: commentObject}));
+            setQuestion("");
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            setIsDisabled(false);
+            handleSavePurchase();
+
+        }
+    }
+
 
     useEffect(()=>
     {
@@ -111,8 +132,52 @@ const ViewProduct = () => {
                         <h2>All comments</h2>
                         <br/>
                         {selectedProduct && selectedProduct.comments.length === 0 && <h3>No comments currently available</h3>}
-                        {authenticated && selectedProduct && user.id !== selectedProduct.userSeller.id && (
-                            <Button type='primary'>Add comment</Button>
+
+                        {selectedProduct && selectedProduct.comments.length > 0 && (
+                        <div>
+                            <List>
+                                {selectedProduct.comments.map((comment,index) =>
+                                    (
+                                        <List.Item key={index}>
+                                            <List.Item.Meta
+                                                avatar={<Avatar
+                                                    src={comment.user.avatar !== null ? require("../../assets/users/" + user.avatar) : require("../../assets/user_318-159711.avif")}
+                                                    alt="Image"/>}
+                                                title={<p
+                                                    strong>{comment.user.username}</p>}
+                                                description={comment.question}
+                                            />
+                                            {comment.answer !== null && (
+                                                <p>
+                                                    <strong style={{ color: 'lightblue' }}>Answer:</strong> {comment.answer}
+                                                </p>
+                                            )}
+                                            {user && comment.answer === null &&
+                                                (<div>
+                                                      <button>Reply</button>
+                                                    </div>
+                                                )
+                                            }
+                                        </List.Item>
+                                    ))}
+                            </List>
+                            <hr style={{borderBottom:"2px solid white"}}/>
+                        </div>)}
+                        <br/>
+                        <br/>
+                        <br/>
+                        {authenticated && selectedProduct && user.id !== selectedProduct.userSeller.id &&
+                            (
+                                <div>
+                                <h1>Ask question</h1>
+                                    <br/>
+                                    <textarea style={{width:'80%'}} rows={6} cols={30} name='question' maxLength={255}
+                                              value={question}
+                                              onChange={(e) => setQuestion(e.target.value)} placeholder="Insert question" />
+                                    <br/>
+                                    <br/>
+                                <Button disabled={isDisabled} style={{width:'fit-content'}} onClick={askQuestion} type='primary'>Add comment</Button>
+                                </div>
                         )}
                     </Sider>
                     <Content style={{textAlign:'left',color:'#000',marginLeft:'10%',marginTop:'3%', overflow:'auto'}}>
