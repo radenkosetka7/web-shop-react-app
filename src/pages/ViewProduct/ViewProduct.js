@@ -138,6 +138,7 @@ const ViewProduct = () => {
                             <List>
                                 {selectedProduct.comments.map((comment,index) =>
                                     (
+                                        <div>
                                         <List.Item key={index}>
                                             <List.Item.Meta
                                                 avatar={<Avatar
@@ -145,26 +146,31 @@ const ViewProduct = () => {
                                                     alt="Image"/>}
                                                 title={<p
                                                     strong>{comment.user.username}</p>}
-                                                description={comment.question}
+                                                description={<div style={{ color: 'white' }}>{comment.question}</div>}
                                             />
+                                        </List.Item>
                                             {comment.answer !== null && (
-                                                <p>
-                                                    <strong style={{ color: 'lightblue' }}>Answer:</strong> {comment.answer}
-                                                </p>
+                                                <div>
+                                                    <p style={{color:'white'}} className='replayMessage'>
+                                                        <strong style={{ color: 'whitesmoke' }}>Answer: </strong> {comment.answer}
+                                                    </p>
+                                                </div>
                                             )}
-                                            {user && comment.answer === null &&
-                                                (<div>
-                                                      <button>Reply</button>
+                                            {user && comment.answer === null && selectedProduct.userSeller.id === user.id &&
+                                                (<div className='buttonStyle'>
+                                                        <TextArea maxLength={255} style={{width:'98%'}}  placeholder="Insert answer here..."></TextArea>
+                                                        <br/>
+                                                        <br/>
+                                                        <Button>Reply</Button>
                                                     </div>
                                                 )
                                             }
-                                        </List.Item>
+                                            <hr/>
+                                        </div>
                                     ))}
                             </List>
                             <hr style={{borderBottom:"2px solid white"}}/>
                         </div>)}
-                        <br/>
-                        <br/>
                         <br/>
                         {authenticated && selectedProduct && user.id !== selectedProduct.userSeller.id &&
                             (

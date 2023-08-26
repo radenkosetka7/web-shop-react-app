@@ -15,10 +15,12 @@
 }
 
 .replayMessage {
-    display: flex;
-    justify-content: left;
-    align-items: flex-start;
     width: 100%;
-    flex-direction: column;
+    text-align: left;
+    margin-left: 3%;
+}
 
+.buttonStyle {
+    text-align: right;
+    margin-right: 2%;
 }
