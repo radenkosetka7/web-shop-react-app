@@ -57,7 +57,7 @@ export const commentProduct = (idProduct,commentData) => {
 
 export const answerComment = (idComment,answerData) => {
     return authInstance
-        .post(`products/${idComment}/comment/answer`,answerData)
+        .put(`products/${idComment}/comment/answer`,answerData)
         .then((results) => results.data);
 };
 

@@ -3,7 +3,7 @@ import {Avatar, Button, Card, Form, Input, Layout, List} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 import SimpleImageSlider from "react-simple-image-slider";
-import {commentProduct, getProduct, purchaseProduct} from "../../redux-store/productSlice";
+import {answerComment, commentProduct, getProduct, purchaseProduct} from "../../redux-store/productSlice";
 import './ViewProduct.css'
 import PurchaseProduct from "../PurchaseProduct/PurchaseProduct";
 import jwtDecode from "jwt-decode";
@@ -22,12 +22,8 @@ const ViewProduct = () => {
     const [buyModal,setBuyModal] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
     const {authenticated,user} = useSelector((state)=>state.users);
-    const [showInsertCommentar, setShowInsertCommentar] = useState(false);
-    const formRef = useRef(null);
-    const formRefReply = useRef(null);
     const [isDisabled, setIsDisabled] = useState(false);
-    const [showErrorMessage, setShowErrorMessage] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
+    const [replyText, setReplyText] = useState('');
 
     const formattedDate = (date) =>
         new Date(date).toLocaleDateString('en-US', {
@@ -48,9 +44,6 @@ const ViewProduct = () => {
     const handleBuyModalClose = () => {
         setBuyModal(false);
     };
-    const handleClickReply = (e) => {
-        e.stopPropagation();
-    };
 
     const handleSavePurchase = () => {
         setRefreshKey((prevKey) => prevKey + 1);
@@ -59,6 +52,22 @@ const ViewProduct = () => {
         handleBuyModalClose();
         dispatch(purchaseProduct({id:id}));
         handleSavePurchase();
+    }
+
+    function answerOnComment(comment)
+    {
+        if(replyText.trim().length > 0 )
+        {
+            const answerQues = {
+                answer: replyText
+            };
+
+            console.log("sta mi je answer  " + JSON.stringify(answerQues))
+            dispatch(answerComment({id:comment.id,value:answerQues})).then(response=>{
+                setReplyText('');
+                handleSavePurchase();
+            });
+        }
     }
     const handleFormReply = async (values, idKomentara) => {
         // console.log("handle form reply " + JSON.stringify(values));
@@ -158,10 +167,12 @@ const ViewProduct = () => {
                                             )}
                                             {user && comment.answer === null && selectedProduct.userSeller.id === user.id &&
                                                 (<div className='buttonStyle'>
-                                                        <TextArea maxLength={255} style={{width:'98%'}}  placeholder="Insert answer here..."></TextArea>
+                                                        <TextArea maxLength={255} style={{width:'98%'}}
+                                                                  onChange={(e) => setReplyText(e.target.value)}
+                                                                  placeholder="Insert answer here..."></TextArea>
                                                         <br/>
                                                         <br/>
-                                                        <Button>Reply</Button>
+                                                        <Button onClick={() => answerOnComment(comment)}>Reply</Button>
                                                     </div>
                                                 )
                                             }
