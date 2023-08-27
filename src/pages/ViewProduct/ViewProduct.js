@@ -69,36 +69,9 @@ const ViewProduct = () => {
             });
         }
     }
-    const handleFormReply = async (values, idKomentara) => {
-        // console.log("handle form reply " + JSON.stringify(values));
-        //
-        // try {
-        //     console.log("values " + JSON.stringify(values));
-        //
-        //     const answerData = {
-        //         odgovor: values.replyComm,
-        //     };
-        //     console.log("questionData " + JSON.stringify(answerData) + " id " + idKomentara);
-        //     const response = await dispatch(sendAnswer({id: idKomentara, answerData: answerData}));
-        //     console.log("response " + JSON.stringify(response));
-        // } catch (error) {
-        //     setShowErrorMessage(true);
-        //     setErrorMessage("Reply on comment failed.");
-        //     setTimeout(() => {
-        //         setShowErrorMessage(false);
-        //         setErrorMessage("");
-        //         setIsDisabled(false);
-        //
-        //     }, 1500);
-        //     console.log("error" + error);
-        // } finally {
-        //     setRefreshKey((prevKey) => prevKey + 1);
-        // }
-    }
 
     const askQuestion = async () => {
 
-        console.log("pitanje je staa " + question);
         if (question !== '') {
             const commentObject = {
                 question: question
