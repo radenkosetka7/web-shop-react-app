@@ -7,7 +7,7 @@ import jwtDecode from "jwt-decode";
 import {getUser} from "../../redux-store/userSlice";
 import EditProfile from "../EditProfile/EditProfile";
 import ChangePassword from "../../components/ChangePassword/ChangePassword";
-import {getAllProductsForSeller,getAllProductsForBuyer} from "../../redux-store/productSlice";
+import {getAllProductsForSeller, getAllProductsForBuyer, removeProduct} from "../../redux-store/productSlice";
 import CardComponent from "../../components/Card/CardComponent";
 
 const {Footer, Sider, Content} = Layout;
@@ -27,7 +27,7 @@ const Profile = () => {
     const [soldProducts, setSoldProducts] = useState(false);
     const [purchasedProducts, setPurchasedProducts] = useState(false);
 
-    const {products} = useSelector((state) => state.products);
+    const {products,selectedProduct} = useSelector((state) => state.products);
 
 
     useEffect(() => {
@@ -106,6 +106,10 @@ const Profile = () => {
     useEffect(()=>
     {
 
+        if(selectedProduct !== null)
+        {
+            dispatch(removeProduct());
+        }
         if(activeProducts)
        {
            dispatch(getAllProductsForSeller({page:page,size:size,finished:0}));

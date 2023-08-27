@@ -48,9 +48,10 @@ const ViewProduct = () => {
     const handleSavePurchase = () => {
         setRefreshKey((prevKey) => prevKey + 1);
     };
-    const onFinish = () => {
+    const onFinish = async () => {
         handleBuyModalClose();
-        dispatch(purchaseProduct({id:id}));
+        dispatch(purchaseProduct({id: id}));
+        await new Promise(resolve => setTimeout(resolve, 1000));
         handleSavePurchase();
     }
 
@@ -62,7 +63,6 @@ const ViewProduct = () => {
                 answer: replyText
             };
 
-            console.log("sta mi je answer  " + JSON.stringify(answerQues))
             dispatch(answerComment({id:comment.id,value:answerQues})).then(response=>{
                 setReplyText('');
                 handleSavePurchase();
@@ -124,7 +124,7 @@ const ViewProduct = () => {
                                         <List.Item key={index}>
                                             <List.Item.Meta
                                                 avatar={<Avatar
-                                                    src={comment.user.avatar !== null ? require("../../assets/users/" + user.avatar) : require("../../assets/user_318-159711.avif")}
+                                                    src={comment.user.avatar !== null ? require("../../assets/users/" + comment.user.avatar) : require("../../assets/user_318-159711.avif")}
                                                     alt="Image"/>}
                                                 title={<p
                                                     strong>{comment.user.username}</p>}
@@ -156,7 +156,7 @@ const ViewProduct = () => {
                             <hr style={{borderBottom:"2px solid white"}}/>
                         </div>)}
                         <br/>
-                        {authenticated && selectedProduct && user.id !== selectedProduct.userSeller.id &&
+                        {authenticated && selectedProduct && selectedProduct.finished === 0 && user.id !== selectedProduct.userSeller.id &&
                             (
                                 <div>
                                 <h1>Ask question</h1>
@@ -176,7 +176,7 @@ const ViewProduct = () => {
                                 <Card style={{width:'fit-content%',backgroundColor:'transparent', marginRight:'10%'}}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <h2>{selectedProduct.title}</h2>
-                                        {authenticated && selectedProduct.finished !== 0 && selectedProduct.userSeller.id !== user.id && <Button onClick={handleBuyModalOpen} type={"primary"}>Buy product</Button> }
+                                        {authenticated && selectedProduct.finished === 0 && selectedProduct.userSeller.id !== user.id && <Button onClick={handleBuyModalOpen} type={"primary"}>Buy product</Button> }
                                     </div>
                                     <p className='pView'>{selectedProduct.price} BAM</p>
                                     <p>{selectedProduct.category.name}</p>

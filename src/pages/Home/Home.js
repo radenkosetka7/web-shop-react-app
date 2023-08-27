@@ -51,6 +51,8 @@ const Home = () => {
 
     const onSearch = (value) => {
         setTitle(value);
+        setCurrent(1);
+        setPage(0);
     };
     const dispatch = useDispatch();
 
@@ -134,15 +136,13 @@ const Home = () => {
             dispatch(getAllProducts({page, size, title}));
 
         } else if (searchAttrsClicked) {
+
             const response = dispatch(searchProduct({page: page, size: size, value: searchData}));
-            if (response.error) {
+            if (response.error)
+            {
                 setSearchAttrsClicked(false);
-            } else {
-                if (!searchAttrsClicked) {
-                    setSearchAttrsClicked(true);
-                    setCurrent(1);
-                    setPage(0);
-                }
+                setCurrent(1);
+                setPage(0);
             }
         }
 
@@ -152,6 +152,8 @@ const Home = () => {
     const handleSubmit = async () => {
         handleChangeRefreshKey();
         setSearchAttrsClicked(true);
+        setCurrent(1);
+        setPage(0);
 
     }
 
@@ -224,7 +226,7 @@ const Home = () => {
                                             },
                                         }));
                                     }}/>}
-                                {attribute.type === 'NUMBER' || attribute.type === 'DOUBLE' &&
+                                {(attribute.type === 'INT' || attribute.type === 'DOUBLE') &&
                                     <InputNumber value={attributeValues[attribute.id]?.value || 0} min={0}
                                                  onChange={(value) => setAttributeValues(prevValues => ({
                                                      ...prevValues,

@@ -28,12 +28,12 @@ const CardComponent = ({product, handleChangeRefreshKey}) => {
        <Card
             hoverable
             className='card'
-            cover={<img alt="example" className='image' alt="Logo"
+            cover={<img style={{height:'200px'}} alt="example" className='image' alt="Logo"
                         src={require('../../assets/products/' + product.images[0].productImage)}/>}
         >
             <Meta className='price' title={product.title} description={`${product.price} BAM`}/>
            <br/>
-           {user && product && product.userSeller.id === user.id && <Button type='primary' onClick={handleDeleteClick} style={{backgroundColor:'red'}}><DeleteOutlined /> Delete</Button>}
+           {user && product && product.userSeller.id === user.id && <Button type='primary' onClick={handleDeleteClick} style={{backgroundColor:'red', width:'fit-content'}}><DeleteOutlined /> Delete</Button>}
        </Card>
         </Link>
     );
