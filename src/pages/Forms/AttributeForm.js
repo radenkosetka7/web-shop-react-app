@@ -33,7 +33,7 @@ const AttributeForm = ({ onFinish, categoryId, initialValues }) => {
                         wrapperCol={{ span: 10 }}
                         rules={[{ required: true, message: "Please enter a value." }]}
                     >
-                        {(attribute.type === 'INT' || attribute.type === 'DOUBLE') && <InputNumber min={1} />}
+                        {(attribute.type === 'INT' || attribute.type === 'DOUBLE') && <InputNumber min={0} />}
                         {attribute.type === 'STRING' && <Input/>}
                     </Form.Item>
             ))}
